@@ -1,0 +1,48 @@
+.todo-item {
+	text-align: left;
+	font-size: 20px;
+	width: 30%;
+	padding-left: 0px;
+	margin:10px auto 10px auto;
+
+}
+
+.container {
+	text-align: center;
+	width:60%;
+	margin: 0 auto;
+	background:;
+	border: 2px solid gray;
+
+}
+
+.completed {
+	text-align: left;
+	font-size: 20px;
+	width: 30%;
+	padding-left: 0px;
+	margin:10px auto 10px auto;
+	text-decoration: line-through;
+
+}
+
+.crossbutton {
+	width:10px;
+	margin-left: 5px;
+	background: white;
+	border: 0px solid white;
+	color: red;
+	font-size: 10px;
+}
+
+.itemcontainer {
+	text-align: left;
+	font-size: 20px;
+	width: 30%;
+	padding-left: 0px;
+	margin: 10px auto 10px auto;
+}
+
+ul {
+	list-style-type: none;
+}
