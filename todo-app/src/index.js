@@ -6,14 +6,14 @@ let todo_data = [];
 
 function Todoitem(props) {
 	return(
-		<div className="itemcontainer" onMouseDown={props.onmousedown} onMouseUp={props.onmouseup}>
+		<div className="itemcontainer" onMouseDown={props.onMouseDown} onMouseUp={props.onMouseUp}>
 			<span className={props.item.completed ? "completed" : "todo-item"}>
-				<input type="checkbox" checked={props.item.completed} onChange={() => props.onclick(props.item.id)}/>
+				<input id={props.item.id} name="check" type="checkbox" checked={props.item.completed} onChange={props.onChange}/>
 				<span> 
 					{props.item.text}
 				</span>
 			</span>
-			<button className="crossbutton" name="xbutton" onClick={() => props.onsubmit(props.item.id)}>     X</button> 
+			<button id={props.item.id} className="crossbutton" name="xbutton" onClick={props.onChange}>     X</button> 
 		</div>
 	);
 }
@@ -23,32 +23,42 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			lst:todo_data,
-			newtask: ""
+			newtask: "",
+			popup: false,
+			popupid: Infinity
 		};
-		this.checkOff = this.checkOff.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleRemove = this.handleRemove.bind(this);
 		this.handleButtonPress = this.handleButtonPress.bind(this);
 		this.handleButtonRelease = this.handleButtonRelease.bind(this);
 
 	}
 
-	checkOff(i) {
-		const copied = this.state.lst.slice();
-		copied[i].completed = !copied[i].completed;
-		this.setState(
-			{lst:copied,
-			 newtask: ""
-			}
-		);
-	}
-
 	handleChange(event) {
 		const {name, value} = event.target;
-		this.setState({
-			[name]: value
-		})
+		if (name === "xbutton") {
+			const idx = event.target.id;
+			const copied = this.state.lst.slice();
+			copied.splice(idx, 1);
+			for (let i = 0; i < copied.length; i++) {
+				copied[i].id = i; 
+			}
+			this.setState({
+				lst:copied,
+				newtask: ""
+			})
+		} else if (name === "check") {
+			const idx = event.target.id;
+			const copied = this.state.lst.slice();
+			copied[idx].completed = !copied[idx].completed;
+			this.setState({
+				lst:copied,
+			});
+		} else {
+			this.setState({
+				[name] : value
+			})
+		}
 	}
 
 	handleSubmit(event) {
@@ -64,20 +74,8 @@ class App extends React.Component {
 		});
 	}
 
-	handleRemove(i) {
-		const copied = this.state.lst.slice();
-		copied.splice(i, 1);
-		for (let i = 0; i < copied.length; i++) {
-			copied[i].id = i; 
-		}
-		this.setState({
-			lst:copied,
-			newtask: ""
-		})
-	}
-
 	handleButtonPress() {
-		this.buttonPressTimer = setTimeout(() => alert("Long press activated"), 1500);
+		this.buttonPressTimer = setTimeout(() => this.setState(prev => ({popup: !prev.popup})), 1500);
 	}
 
 	handleButtonRelease() {
@@ -87,8 +85,12 @@ class App extends React.Component {
 	
 
 	render() {
-		const todo_lst = this.state.lst.map(items => <Todoitem key={items.id} item={items} onclick={this.checkOff} onsubmit={this.handleRemove}
-														onmousedown={this.handleButtonPress} onmouseup={this.handleButtonRelease}/>);
+		const todo_lst = this.state.lst.map(items => <Todoitem key={items.id} 
+															   item={items} 
+															   onChange={this.handleChange} 
+															   onMouseDown={this.handleButtonPress}
+															   onMouseUp={this.handleButtonRelease}
+															   />);
 		return(
 			<div className="container">
 				<div>
@@ -97,7 +99,7 @@ class App extends React.Component {
 					</ul>
 				</div>
 				<div>
-					<Addbox handleSubmit={this.handleSubmit} handleChange={this.handleChange} value={this.state.newtask} />
+					<Addbox handleSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newtask} />
 				</div>
 			</div>
 		);
@@ -110,12 +112,22 @@ class Addbox extends React.Component {
 			<div>
 				<form onSubmit={this.props.handleSubmit}>
 					<label htmlFor="addbox"> Add new task: </label>
-					<textarea id="addbox" name="newtask" value={this.props.value} onChange={this.props.handleChange}/>
+					<textarea id="addbox" name="newtask" value={this.props.value} onChange={this.props.onChange}/>
 					<br/>
 					<button>Add</button>
 				</form>
 			</div>
 
+		)
+	}
+}
+
+class PopUp extends React.Component {
+	render() {
+		return(
+			<div>
+				<h1> Test </h1>
+			</div>
 		)
 	}
 }
