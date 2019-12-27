@@ -6,8 +6,8 @@ let todo_data = [];
 
 function Todoitem(props) {
 	return(
-		<div className="itemcontainer" onMouseDown={props.onMouseDown} onMouseUp={props.onMouseUp}>
-			<span className={props.item.completed ? "completed" : "todo-item"}>
+		<div id={props.item.id} className="itemcontainer" onMouseDown={props.onMouseDown} onMouseUp={props.onMouseUp}>
+			<span  className={props.item.completed ? "completed" : "todo-item"}>
 				<input id={props.item.id} name="check" type="checkbox" checked={props.item.completed} onChange={props.onChange}/>
 				<span> 
 					{props.item.text}
@@ -25,7 +25,8 @@ class App extends React.Component {
 			lst:todo_data,
 			newtask: "",
 			popup: false,
-			popupid: Infinity
+			popupid: Infinity,
+			modifytask: ""
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,7 +55,13 @@ class App extends React.Component {
 			this.setState({
 				lst:copied,
 			});
-		} else {
+		} else if (name === "close") {
+			this.setState({
+				popup: false,
+				popupid: Infinity
+			});
+		}
+		else {
 			this.setState({
 				[name] : value
 			})
@@ -63,19 +70,37 @@ class App extends React.Component {
 
 	handleSubmit(event) {
 		event.preventDefault();
-		const new_id = this.state.lst.length;
-		const new_text = this.state.newtask;
-		const new_task = {id:new_id, text:new_text, completed:false,}
-		const copied = this.state.lst.slice();
-		copied.push(new_task);
-		this.setState({
-			lst:copied,
-			newtask: ""
-		});
+		if (event.target.name === "newtask") {
+			const new_id = this.state.lst.length;
+			const new_text = this.state.newtask;
+			const new_task = {id:new_id, text:new_text, completed:false,}
+			const copied = this.state.lst.slice();
+			copied.push(new_task);
+			this.setState({
+				lst:copied,
+				newtask: ""
+			});
+		} else {
+			const idx = this.state.popupid;
+			const new_text = this.state.modifytask;
+			const new_task = {id:idx, text:new_text, completed:false}
+			const copied = this.state.lst.slice();
+			copied[idx] = new_task;
+			this.setState({
+				lst:copied,
+				popup: false,
+				popupid: Infinity,
+				modifytask: ""
+			})
+		}
 	}
 
-	handleButtonPress() {
-		this.buttonPressTimer = setTimeout(() => this.setState(prev => ({popup: !prev.popup})), 1500);
+	handleButtonPress(event) {
+		const idx = event.currentTarget.id;
+		this.buttonPressTimer = setTimeout(() => this.setState(prev => ({
+			popup: true,
+			popupid: idx
+		})), 1500);
 	}
 
 	handleButtonRelease() {
@@ -99,7 +124,14 @@ class App extends React.Component {
 					</ul>
 				</div>
 				<div>
-					<Addbox handleSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newtask} />
+					<Addbox onSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newtask} />
+				</div>
+				<div>
+					{this.state.popup ? <PopUp value={this.state.modifytask} 
+											   onChange={this.handleChange}
+											   onSubmit={this.handleSubmit}
+											   />
+									  : null}
 				</div>
 			</div>
 		);
@@ -110,7 +142,7 @@ class Addbox extends React.Component {
 	render() {
 		return(
 			<div>
-				<form onSubmit={this.props.handleSubmit}>
+				<form name="newtask" onSubmit={this.props.onSubmit}>
 					<label htmlFor="addbox"> Add new task: </label>
 					<textarea id="addbox" name="newtask" value={this.props.value} onChange={this.props.onChange}/>
 					<br/>
@@ -126,7 +158,12 @@ class PopUp extends React.Component {
 	render() {
 		return(
 			<div>
-				<h1> Test </h1>
+				<form name="modifytask" onSubmit={this.props.onSubmit}>
+					<label htmlFor="modifybox"> Modify task: </label>
+					<textarea id="modifybox" name="modifytask" value={this.props.value} onChange={this.props.onChange}/>
+					<button name="close" onClick={this.props.onChange}>Cancel</button>
+					<button>Confirm</button>
+				</form>
 			</div>
 		)
 	}
