@@ -6,14 +6,12 @@ let todo_data = [];
 
 function Todoitem(props) {
 	return(
-		<div id={props.item.id} className="itemcontainer" onMouseDown={props.onMouseDown} onMouseUp={props.onMouseUp}>
-			<span  className={props.item.completed ? "completed" : "todo-item"}>
+		<div id={props.item.id} className={props.item.completed ? "completed" : "todo-item"} onMouseDown={props.onMouseDown} onMouseUp={props.onMouseUp}>
 				<input id={props.item.id} name="check" type="checkbox" checked={props.item.completed} onChange={props.onChange}/>
 				<span> 
 					{props.item.text}
 				</span>
-			</span>
-			<button id={props.item.id} className="crossbutton" name="xbutton" onClick={props.onChange}>     X</button> 
+				<button id={props.item.id} className="crossbutton" name="xbutton" onClick={props.onChange}>X</button> 
 		</div>
 	);
 }
@@ -100,7 +98,7 @@ class App extends React.Component {
 		this.buttonPressTimer = setTimeout(() => this.setState(prev => ({
 			popup: true,
 			popupid: idx
-		})), 1500);
+		})), 750);
 	}
 
 	handleButtonRelease() {
@@ -118,21 +116,14 @@ class App extends React.Component {
 															   />);
 		return(
 			<div className="container">
-				<div>
-					<ul>
-						{todo_lst.map(x => <li key={x.key}> {x} </li>)}
-					</ul>
-				</div>
-				<div>
-					<Addbox onSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newtask} />
-				</div>
-				<div>
-					{this.state.popup ? <PopUp value={this.state.modifytask} 
+				{todo_lst}
+				<Addbox onSubmit={this.handleSubmit} onChange={this.handleChange} value={this.state.newtask} />
+				{this.state.popup ? <PopUp value={this.state.modifytask} 
 											   onChange={this.handleChange}
 											   onSubmit={this.handleSubmit}
 											   />
 									  : null}
-				</div>
+				<p>Hold left click to edit items!</p>
 			</div>
 		);
 	}
@@ -141,11 +132,12 @@ class App extends React.Component {
 class Addbox extends React.Component {
 	render() {
 		return(
-			<div>
+			<div className="formtext">
 				<form name="newtask" onSubmit={this.props.onSubmit}>
-					<label htmlFor="addbox"> Add new task: </label>
-					<textarea id="addbox" name="newtask" value={this.props.value} onChange={this.props.onChange}/>
-					<br/>
+					<p className="formfield">
+						<label htmlFor="addbox"> Add new task: </label>
+						<textarea id="addbox" name="newtask" value={this.props.value} onChange={this.props.onChange}/>
+					</p>
 					<button>Add</button>
 				</form>
 			</div>
@@ -157,14 +149,15 @@ class Addbox extends React.Component {
 class PopUp extends React.Component {
 	render() {
 		return(
-			<div>
-				<form name="modifytask" onSubmit={this.props.onSubmit}>
-					<label htmlFor="modifybox"> Modify task: </label>
-					<textarea id="modifybox" name="modifytask" value={this.props.value} onChange={this.props.onChange}/>
-					<button name="close" onClick={this.props.onChange}>Cancel</button>
-					<button>Confirm</button>
-				</form>
-			</div>
+				<div className="popup">
+						<form  className="popuptext" name="modifytask" onSubmit={this.props.onSubmit}>
+							<label htmlFor="modifybox"> Modify task: </label>
+							<textarea id="modifybox" name="modifytask" value={this.props.value} onChange={this.props.onChange}/>
+							<br/>
+							<button name="close" onClick={this.props.onChange}>Cancel</button>
+							<button>Confirm</button>
+						</form>
+				</div>
 		)
 	}
 }

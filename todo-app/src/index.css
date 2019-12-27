@@ -1,13 +1,40 @@
 .todo-item {
+	position: relative;
 	text-align: left;
 	font-size: 20px;
-	width: 30%;
+	width: 50%;
 	padding-left: 0px;
 	margin:10px auto 10px auto;
+	border: 2px solid bisque;
+	border-radius: 25px;
 
 }
 
+.completed {
+	position: relative;
+	text-align: left;
+	font-size: 20px;
+	width: 50%;
+	padding-left: 0px;
+	margin:10px auto 10px auto;
+	border: 2px solid bisque;
+	border-radius: 25px;
+	text-decoration: line-through;
+}
+
+.crossbutton {
+	position: absolute;
+	left: 93%;
+	top: 3.5px;
+	width:10px;
+	background: white;
+	border: 0px solid white;
+	color: red;
+	font-size: 10px;
+}
+
 .container {
+	position: relative;
 	text-align: center;
 	width:60%;
 	margin: 0 auto;
@@ -15,33 +42,53 @@
 
 }
 
-.completed {
-	text-align: left;
-	font-size: 20px;
-	width: 30%;
-	padding-left: 0px;
-	margin:10px auto 10px auto;
-	text-decoration: line-through;
+.formtext {
+	text-align: center;
+	width: 50%;
+	margin: 5px auto;
+	padding-bottom: 5px;
+	border: 1px solid gray;
+}
+
+.formtext * {
+	vertical-align: middle;
+}
+
+textarea {
+	border: 2px solid gainsboro;
+}
+
+.popup {
+	width: 60%;
+	height: 80%;
+	position: absolute;
+	text-align: center;
+	display: inline-block;
+	right: 20%;
+	left: 20%;
+	top: 10%;
+	bottom: 10%;
+	background: whitesmoke;
+	
+}
+
+.popuptext {
+	display: flex;
+	align-items:center;
+	justify-content: center;
+	position: absolute;
+	width: 80%;
+	right: 10%;
+	left: 10%;
+	top: 10%;
+	bottom: 10%;
+	margin: 5% auto;
 
 }
 
-.crossbutton {
-	width:10px;
-	margin-left: 5px;
-	background: white;
-	border: 0px solid white;
-	color: red;
-	font-size: 10px;
-}
 
-.itemcontainer {
-	text-align: left;
-	font-size: 20px;
-	width: 30%;
-	padding-left: 0px;
-	margin: 10px auto 10px auto;
-}
 
-ul {
-	list-style-type: none;
-}
+
+
+
+
